@@ -4,10 +4,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from xgboost import XGBClassifier
 
-# 1. Load the dataset
+#  Load the dataset
 match_data = pd.read_csv("SP1.csv")
 
-# 2. Feature Engineering
+# Feature Engineering
 match_data['Home_Shots_Target_Form'] = match_data.groupby('HomeTeam')['HST'].transform(lambda x: x.shift(1).rolling(3).mean())
 match_data['Away_Shots_Target_Form'] = match_data.groupby('AwayTeam')['AST'].transform(lambda x: x.shift(1).rolling(3).mean())
 match_data['Home_Goals_Form'] = match_data.groupby('HomeTeam')['FTHG'].transform(lambda x: x.shift(1).rolling(3).mean())
@@ -24,12 +24,12 @@ match_data = match_data.dropna(subset=features + ['FTR'])
 X = match_data[features]
 y = LabelEncoder().fit_transform(match_data['FTR'])
 
-# 3. Train XGBoost
+# Train XGBoost
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 model = XGBClassifier(n_estimators=100, learning_rate=0.05, max_depth=3, random_state=42)
 model.fit(X_train, y_train)
 
-# 4. Generate Feature Importance Visualization
+# Generate Feature Importance Visualization
 print("Generating Feature Importance Chart...")
 importance = model.feature_importances_
 
